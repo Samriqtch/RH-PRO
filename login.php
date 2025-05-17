@@ -31,11 +31,15 @@ include("db.php");
         $stmt->execute(['username' => $username, 'password' => $password]);
         $user = $stmt->fetch();
 
-        if ($user) {
-            echo "Bienvenue, " . htmlspecialchars($user['username']) . "!";
-            // Redirection vers une autre page ou affichage d'un message de bienvenue
+        if ($stmt->rowCount() > 0) {
+            session_start();
+            $_SESSION["login"] = $username;
+            header("Location: home.php");
+            exit();
         } else {
-            echo "Identifiants incorrects.";
+            $error = "Identifiants incorrects.";
+            // Optionnel : afficher l'erreur sur la page
+            echo $error;
         }
     }
     ?>
