@@ -1,7 +1,7 @@
 <?php
 //importation de connexion à la base de donnée
 include("db.php");
-
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,19 +31,16 @@ include("db.php");
         $stmt->execute(['username' => $username, 'password' => $password]);
         $user = $stmt->fetch();
 
-        if ($stmt->rowCount() > 0) {
-            session_start();
+        if ($user) {
             $_SESSION["login"] = $username;
+            // Si tu veux aussi stocker l'id de l'entreprise :
+            $_SESSION["entreprise_id"] = $user["entreprise_id"];
             header("Location: home.php");
             exit();
         } else {
-            $error = "Identifiants incorrects.";
-            // Optionnel : afficher l'erreur sur la page
-            echo $error;
+            echo "Identifiants incorrects. Veuillez réessayer.";
         }
     }
     ?>
-
-    
 </body>
 </html>
