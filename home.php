@@ -37,7 +37,7 @@ $employes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="home.php" class="nav-link text-white">Dashboard</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="add_employe.php" class="nav-link text-white">Ajouter un Employé</a>
+                    <a href="add.php" class="nav-link text-white">Ajouter un Employé</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="profile.php" class="nav-link text-white">Mon Profil</a>
