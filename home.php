@@ -1,6 +1,8 @@
 <?php
 session_start();
 include("db.php");
+include("include/header.php");
+
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['login']) || !isset($_SESSION['entreprise_id'])) {
@@ -52,7 +54,7 @@ $employes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="container-fluid p-4">
             <h2 class="text-center mb-4">Liste des Employés</h2>
             <div class="mb-3 text-end">
-                <a href="add_employe.php" class="btn btn-success">Ajouter un Employé</a>
+                <a href="add.php" class="btn btn-success">Ajouter un Employé</a>
             </div>
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark">
