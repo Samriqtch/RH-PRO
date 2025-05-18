@@ -1,5 +1,6 @@
 <?php
 include("db.php");
+include("include/header.php");
 session_start();
 
 // Vérifier si l'utilisateur est connecté

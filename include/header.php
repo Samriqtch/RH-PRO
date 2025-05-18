@@ -1,8 +1,6 @@
-
 <?php
 //importation de connexion à la base de donnée
 include("db.php");
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -17,31 +15,77 @@ include("db.php");
             background-size: cover;
             min-height: 100vh;
         }
-        .login-container {
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-            max-width: 400px;
-            margin: 80px auto;
-            padding: 40px 30px 30px 30px;
+        .sidebar-custom {
+            background: linear-gradient(180deg, #0d6efd 80%, #fff 100%);
+            min-height: 100vh;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+            padding-top: 30px;
         }
-        .userpic {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 50%;
-            display: block;
-            margin: 0 auto 20px auto;
-            border: 3px solid #0d6efd;
+        .sidebar-logo {
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+            font-size: 1.7rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .sidebar-nav .nav-link {
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-nav .nav-link.active, .sidebar-nav .nav-link:hover {
+            color: #0d6efd;
             background: #fff;
         }
-        .login-title {
+        .sidebar-profile {
             text-align: center;
-            margin-bottom: 25px;
-            font-weight: bold;
-            color: #0d6efd;
+            margin-top: 40px;
         }
-        /* Ajoute ici d'autres styles globaux */
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            margin-bottom: 10px;
+        }
+        .sidebar-logout {
+            margin-top: 30px;
+        }
+        @media (max-width: 991.98px) {
+            .sidebar-custom {
+                min-height: auto;
+                padding-top: 10px;
+            }
+        }
     </style>
 </head>
 <body>
+<div class="d-flex">
+    <nav class="sidebar-custom d-flex flex-column p-3" style="width: 250px;">
+        <div class="sidebar-logo">RH-PRO</div>
+        <ul class="nav flex-column sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'home.php' ? ' active' : '' ?>" href="home.php">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'add.php' ? ' active' : '' ?>" href="add.php">Ajouter Employé</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'profile.php' ? ' active' : '' ?>" href="profile.php">Mon Profil</a>
+            </li>
+            <li class="nav-item sidebar-logout">
+                <a class="nav-link" href="logout.php">Déconnexion</a>
+            </li>
+        </ul>
+        <div class="sidebar-profile mt-auto">
+            <img src="uploads/userpic.png" alt="Profil" class="profile-pic">
+            <div class="text-white mt-2" style="font-size:1rem;">
+                <?php if (isset($_SESSION['login'])) echo htmlspecialchars($_SESSION['login']); ?>
+            </div>
+        </div>
+    </nav>
+    <div class="flex-grow-1">
