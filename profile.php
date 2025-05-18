@@ -1,6 +1,7 @@
 <?php
 include("db.php");
 include("include/header.php");
+include("include/navbar.php");
 session_start();
 
 // Vérifier si l'utilisateur est connecté

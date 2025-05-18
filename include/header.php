@@ -16,7 +16,7 @@ include("db.php");
             min-height: 100vh;
         }
         .sidebar-custom {
-            background: linear-gradient(180deg, #0d6efd 80%, #fff 100%);
+            background: #0d6efd; /* Couleur bleue unie */
             min-height: 100vh;
             box-shadow: 2px 0 8px rgba(0,0,0,0.08);
             padding-top: 30px;
