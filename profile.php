@@ -1,8 +1,8 @@
 <?php
+session_start();
 include("db.php");
 include("include/header.php");
 include("include/navbar.php");
-session_start();
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['login']) || !isset($_SESSION['entreprise_id'])) {
@@ -30,14 +30,26 @@ if (!$user) {
 }
 ?>
 
-<div class="container mt-5">
-    <h2 class="mb-4 text-center">Mon Profil</h2>
-    <div class="card mx-auto" style="max-width: 400px;">
-        <div class="card-body">
-            <h5 class="card-title mb-3"><?= htmlspecialchars($user['username']) ?></h5>
-            <p class="card-text"><strong>Entreprise :</strong> <?= htmlspecialchars($user['nom_entreprise']) ?></p>
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 420px; width:100%;">
+        <div class="d-flex flex-column align-items-center">
+            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:90px;height:90px;">
+                <i class="bi bi-person-circle text-white" style="font-size:3rem;"></i>
+            </div>
+            <h4 class="fw-bold mb-1 text-primary"><?= htmlspecialchars($user['username']) ?></h4>
+            <p class="mb-2 text-secondary" style="font-size:1.1rem;">
+                <i class="bi bi-building"></i>
+                <?= htmlspecialchars($user['nom_entreprise']) ?>
+            </p>
+        </div>
+        <hr>
+        <div class="text-center">
+            <a href="logout.php" class="btn btn-outline-danger px-4 mt-2">
+                <i class="bi bi-box-arrow-right"></i> Déconnexion
+            </a>
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <?php include("include/footer.php"); ?>

@@ -2,7 +2,7 @@
 //importation de connexion à la base de donnée
 include("db.php");
 ?>
-<nav class="navbar navbar-expand-lg" style="background-color:rgb(1, 33, 82);">
+<nav class="navbar navbar-expand-lg" style="background-color:rgb(4, 66, 158);">
     <div class="container-fluid">
         <a class="navbar-brand text-white fw-bold" href="home.php"></a>
         <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle navigation">

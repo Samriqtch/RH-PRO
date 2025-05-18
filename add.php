@@ -1,9 +1,6 @@
 <?php
-
-include("db.php");
-include("include/header.php");
-include("include/navbar.php");
 session_start();
+include("db.php");
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['login']) || !isset($_SESSION['entreprise_id'])) {
@@ -32,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header("Location: home.php");
     exit();
 }
+
+include("include/header.php");
+include("include/navbar.php");
 ?>
 
 <div class="container d-flex align-items-center justify-content-center" style="min-height: 90vh;">

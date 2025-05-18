@@ -66,7 +66,10 @@ include("db.php");
 <body>
 <div class="d-flex">
     <nav class="sidebar-custom d-flex flex-column p-3" style="width: 250px;">
-        <div class="sidebar-logo">RH-PRO</div>
+        <div class="sidebar-logo d-flex align-items-center justify-content-center mb-4" style="gap: 10px;">
+            <img src="uploads/RH PRO.png" alt="Logo RH-PRO" style="width:41px;height:40px;object-fit:contain;">
+            RH-PRO
+        </div>
         <ul class="nav flex-column sidebar-nav">
             <li class="nav-item">
                 <a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'home.php' ? ' active' : '' ?>" href="home.php">Dashboard</a>
