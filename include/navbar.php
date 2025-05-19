@@ -2,7 +2,7 @@
 //importation de connexion à la base de donnée
 include("db.php");
 ?>
-<nav class="navbar navbar-expand-lg" style="background-color:rgb(4, 66, 158);">
+<nav class="navbar navbar-expand-lg " style="background-color:rgb(223, 216, 6);">
     <div class="container-fluid">
         <a class="navbar-brand text-white fw-bold" href="home.php"></a>
         <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,7 +10,7 @@ include("db.php");
         </button>
         <div class="collapse navbar-collapse" id="navbarSearch">
             <form class="d-flex ms-auto" role="search" method="get" action="home.php">
-                <input class="form-control me-2" type="search" name="q" placeholder="Rechercher un employé..." aria-label="Search" style="min-width:200px;">
+                <input class="form-control me-2" type="search" name="q" placeholder="Rechercher un employé..." aria-label="Search" style="min-width:300px;">
                 <button class="btn btn-light text-primary fw-bold" type="submit">
                     <i class="bi bi-search"></i> Rechercher
                 </button>
