@@ -3,6 +3,6 @@
     try {
         $pdo = new PDO('mysql:host=localhost;port=3307;dbname=rh_pro', 'samson', '');
     } catch (PDOException $e) {
-        echo 'Connexion  chou e : ' . $e->getMessage();
+        echo 'Connexion  echoue : ' . $e->getMessage();
     }
 ?>
