@@ -12,6 +12,11 @@ if (!isset($_SESSION['login']) || !isset($_SESSION['entreprise_id'])) {
 
 $entreprise_id = $_SESSION['entreprise_id'];
 
+// Pagination
+$rowsPerPage = 10; // Nombre de lignes par page
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $rowsPerPage;
+
 // Recherche
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $params = ['entreprise_id' => $entreprise_id];
@@ -21,12 +26,27 @@ if ($q !== '') {
     $params['q'] = "%$q%";
 }
 
+// Compter le total pour la pagination
+$sql_count = "SELECT COUNT(*) FROM employes e $where";
+$stmt_count = $pdo->prepare($sql_count);
+$stmt_count->execute($params);
+$totalRows = $stmt_count->fetchColumn();
+$totalPages = ceil($totalRows / $rowsPerPage);
+
+// Récupérer les employés paginés
 $sql = "SELECT e.*, en.nom AS nom_entreprise
         FROM employes e
         JOIN entreprises en ON e.entreprise_id = en.id
-        $where";
+        $where
+        ORDER BY e.nom ASC
+        LIMIT :limit OFFSET :offset";
 $stmt = $pdo->prepare($sql);
-$stmt->execute($params);
+foreach ($params as $key => $value) {
+    $stmt->bindValue(":$key", $value);
+}
+$stmt->bindValue(':limit', $rowsPerPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
 $employes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Nombre total d'employés
@@ -45,7 +65,7 @@ $employes_conges = $stmt_conges->fetchColumn();
 <div class="container py-2">
     <br>
     <h2 class="text-center mb-2 fw-bold text-primary">BIENVENUE SUR VOTRE APPLICATION RH </h2>
-    <br>
+
     <div class="row justify-content-center mb-2 g-3">
         <div class="col-12 col-md-6">
             <div class="card shadow border-0 p-3">
@@ -67,80 +87,85 @@ $employes_conges = $stmt_conges->fetchColumn();
 <div>
     <br>
     <h2 class="text-center mb-2 fw-bold text-primary">LISTES DES EMPLOYES</h2>
-    <br>
+    
 </div>
     <!-- Liste des employés stylée et compacte -->
     <div class="d-flex justify-content-center">
-        <div class="table-responsive" style="max-width: 1300px; width: 100%; max-height: 500px; overflow-y: auto;">
-            <table class="table align-middle mb-0 bg-white shadow rounded-4 overflow-hidden" style="background: #f8f9fa; font-size: 0.92rem;">
-                <thead style="background: linear-gradient(90deg, #0d6efd 60%, #00c6ff 100%); color: #fff;">
-                    <tr>
-                        <th class="fw-semibold text-uppercase px-2" style="letter-spacing:1px;">Nom</th>
-                        <th class="fw-semibold text-uppercase px-2">Prénom</th>
-                        <th class="fw-semibold text-uppercase px-2">Salaire</th>
-                        <th class="fw-semibold text-uppercase px-2">Poste</th>
-                        <th class="fw-semibold text-uppercase px-2">Embauche</th>
-                        <th class="fw-semibold text-uppercase px-2">Adresse</th>
-                        <th class="fw-semibold text-uppercase px-2">Tél</th>
-                        <th class="fw-semibold text-uppercase px-2">Email</th>
-                        <th class="fw-semibold text-uppercase px-2">Statut</th>
-                        <th class="fw-semibold text-uppercase px-2">Entreprise</th>
-                        <th class="text-center fw-semibold text-uppercase px-2" style="min-width:110px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($employes as $employe): ?>
-                    <tr class="table-row-hover" style="transition: background 0.2s;">
-                        <td class="fw-bold px-2"><?= htmlspecialchars($employe["nom"]) ?></td>
-                        <td class="px-2"><?= htmlspecialchars($employe["prenom"]) ?></td>
-                        <td class="px-2">
-                            <span class="badge rounded-pill bg-light text-primary border border-primary px-2 py-1 shadow-sm" style="font-size:0.90em;">
-                                <?= htmlspecialchars($employe["salaire"]) ?>
+        <div class="card shadow border-0" style="max-width: 1300px; width: 100%;">
+            <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                <span class="fw-bold fs-5">Liste des employés</span>
+                <span class="badge bg-light text-primary"><?= $total_employes ?> employés</span>
+            </div>
+            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Salaire</th>
+                            <th>Poste</th>
+                            <th>Embauche</th>
+                            <th>Adresse</th>
+                            <th>Tél</th>
+                            <th>Email</th>
+                            <th>Statut</th>
+                            <th>Entreprise</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($employes as $employe): ?>
+                        <tr>
+                            <td class="fw-semibold"><?= htmlspecialchars($employe["nom"]) ?></td>
+                            <td><?= htmlspecialchars($employe["prenom"]) ?></td>
+                            <td>
+                                <span class="badge bg-info text-dark"><?= htmlspecialchars($employe["salaire"]) ?></span>
+                            </td>
+                            <td><?= htmlspecialchars($employe["poste"]) ?></td>
+                            <td><?= htmlspecialchars($employe["date_embauche"]) ?></td>
+                            <td style="max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($employe["adresse"]) ?>">
+                                <?= htmlspecialchars($employe["adresse"]) ?>
+                            </td>
+                            <td><?= htmlspecialchars($employe["telephone"]) ?></td>
+                            <td style="max-width:140px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($employe["email"]) ?>">
+                                <span class="badge bg-light text-dark border border-info"><?= htmlspecialchars($employe["email"]) ?></span>
+                            </td>
+                            <td>
+                                <span class="badge
+                                    <?= $employe["statut"] === "Actif" ? "bg-success" : ($employe["statut"] === "En congé" ? "bg-warning text-dark" : "bg-secondary") ?>">
+                                    <?= htmlspecialchars($employe["statut"]) ?>
                             </span>
-                        </td>
-                        <td class="px-2"><?= htmlspecialchars($employe["poste"]) ?></td>
-                        <td class="px-2"><?= htmlspecialchars($employe["date_embauche"]) ?></td>
-                        <td class="px-2" style="max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($employe["adresse"]) ?>">
-                            <?= htmlspecialchars($employe["adresse"]) ?>
-                        </td>
-                        <td class="px-2"><?= htmlspecialchars($employe["telephone"]) ?></td>
-                        <td class="px-2" style="max-width:140px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="<?= htmlspecialchars($employe["email"]) ?>">
-                            <span class="badge rounded-pill bg-light text-dark border border-info px-2 py-1 shadow-sm" style="font-size:0.90em;">
-                                <?= htmlspecialchars($employe["email"]) ?>
-                            </span>
-                        </td>
-                        <td class="px-2">
-                            <span class="badge rounded-pill px-2 py-1 shadow-sm
-                                <?= $employe["statut"] === "Actif" ? "bg-primary" : ($employe["statut"] === "En congé" ? "bg-warning text-dark" : "bg-secondary") ?>"
-                                style="font-size:0.90em;">
-                                <?= htmlspecialchars($employe["statut"]) ?>
-                            </span>
-                        </td>
-                        <td class="px-2"><?= htmlspecialchars($employe["nom_entreprise"]) ?></td>
-                        <td class="px-2">
-                            <div class="d-flex justify-content-center gap-1">
-                                <a href="view.php?id=<?= $employe['id'] ?>" class="btn btn-outline-info btn-sm rounded-circle shadow-sm" data-bs-toggle="tooltip" title="Voir">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a href="edit.php?id=<?= $employe['id'] ?>" class="btn btn-outline-primary btn-sm rounded-circle shadow-sm" data-bs-toggle="tooltip" title="Modifier">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a href="delete.php?id=<?= $employe['id'] ?>" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm" data-bs-toggle="tooltip" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cet employé ?');">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <?php if (empty($employes)): ?>
-                <div class="alert alert-info text-center mt-3">Aucun employé trouvé.</div>
-            <?php endif; ?>
+                            </td>
+                            <td><?= htmlspecialchars($employe["nom_entreprise"]) ?></td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a href="view.php?id=<?= $employe['id'] ?>" class="btn btn-outline-info btn-sm rounded-circle" data-bs-toggle="tooltip" title="Voir">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="edit.php?id=<?= $employe['id'] ?>" class="btn btn-outline-primary btn-sm rounded-circle" data-bs-toggle="tooltip" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="delete.php?id=<?= $employe['id'] ?>" class="btn btn-outline-danger btn-sm rounded-circle" data-bs-toggle="tooltip" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cet employé ?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php if (empty($employes)): ?>
+                    <div class="alert alert-info text-center mt-3">Aucun employé trouvé.</div>
+                <?php endif; ?>
+            </div>
+            <div class="card-footer bg-white">
+                <!-- Pagination supprimée -->
+            </div>
         </div>
     </div>
     <!-- Fin centrage tableau -->
-</div>
+
+    <!-- Pagination supprimée -->
 
 <!-- Bootstrap Icons & Chart.js -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -234,3 +259,4 @@ $employes_conges = $stmt_conges->fetchColumn();
     padding-right: 8px !important;
 }
 </style>
+

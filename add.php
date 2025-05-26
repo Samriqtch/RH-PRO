@@ -26,7 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute([
         $nom, $prenom, $salaire, $poste, $date_embauche, $adresse, $telephone, $email, $statut, $entreprise_id
     ]);
-    header("Location: home.php");
+
+    // Compte le nombre total d'employés pour calculer la dernière page
+    $sql_total = "SELECT COUNT(*) FROM employes WHERE entreprise_id = :entreprise_id";
+    $stmt_total = $pdo->prepare($sql_total);
+    $stmt_total->execute(['entreprise_id' => $_SESSION['entreprise_id']]);
+    $total_employes = $stmt_total->fetchColumn();
+
+    $rowsPerPage = 10; // Doit être le même que dans home.php
+    $totalPages = ceil($total_employes / $rowsPerPage);
+
+    // Redirige vers la dernière page
+    header('Location: home.php?page=' . $totalPages);
     exit();
 }
 

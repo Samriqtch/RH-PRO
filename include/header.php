@@ -59,6 +59,7 @@ include("db.php");
             .sidebar-custom {
                 min-height: auto;
                 padding-top: 10px;
+                position: fixed;
             }
         }
     </style>
