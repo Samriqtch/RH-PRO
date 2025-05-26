@@ -77,7 +77,7 @@ include("include/navbar.php");
             background: #fff;
             border-radius: 24px;
             box-shadow: 0 8px 32px rgba(1,33,82,0.10), 0 1.5px 6px rgba(1,33,82,0.08);
-            max-width: 520px;
+            max-width: 690px;
             margin: 40px auto;
             padding: 40px 32px 32px 32px;
         }
@@ -111,11 +111,35 @@ include("include/navbar.php");
             margin-bottom: 18px;
         }
         .edit-icon .bi {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             color: #0d6efd;
             background: #eaf1fb;
             border-radius: 50%;
-            padding: 18px;
+            padding: 16px;
+        }
+        .btn-annuler {
+            background: #dc3545; /* rouge Bootstrap */
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+        .btn-enregistrer {
+            background:rgb(53, 64, 220); /* rouge Bootstrap */
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+        .btn-annuler:hover {
+            background: #a71d2a;
+        }
+        .form-control {
+            border-radius: 8px;
+            box-shadow: none;
+            border: 1px solid #ced4da;
+        }
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
         }
     </style>
 </head>
@@ -168,8 +192,9 @@ include("include/navbar.php");
                     <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($employe['email']) ?>" required>
                 </div>
                 <div class="col-12 text-center mt-3">
-                    <button type="submit" class="btn btn-edit px-4">Enregistrer</button>
-                    <a href="home.php" class="btn btn-secondary ms-2 px-4">Annuler</a>
+                    <button type="submit" class="btn btn-enregistrer px-4">Enregistrer</button>
+                    <button type="submit" class="btn btn-annuler ms-2 px-4" onclick="window.location.href='home.php'" >Annuler</button>
+                   
                 </div>
             </form>
         </div>
